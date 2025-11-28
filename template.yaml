@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Business Intelligence Assistant - AI-Powered Business Analysis and Risk Assessment
+
+Parameters:
+  OpenAIApiKey:
+    Type: String
+    Description: OpenAI API Key for Business Intelligence AI services
+    NoEcho: true
+    Default: ""
+
+Globals:
+  Function:
+    Timeout: 120  # 2 minutes
+    Runtime: python3.9
+    MemorySize: 1024  # Increased memory
+    Environment:
+      Variables:
+        OPENAI_API_KEY: !Ref OpenAIApiKey
+        GPT_MODEL: "gpt-4o-2024-08-06"
+        GPT_TEMPERATURE: "0.3"
+
+Resources:
+  # Business Analysis Function
+  BusinessAnalysisFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lambda_handlers.business_analysis_handler.lambda_handler
+      Timeout: 120  # 2 minutes
+      MemorySize: 1024
+      Events:
+        BusinessAnalysisApi:
+          Type: Api
+          Properties:
+            Path: /business-analysis
+            Method: post
+            RestApiId: !Ref BusinessIntelligenceApi
+        BusinessAnalysisHealthApi:
+          Type: Api
+          Properties:
+            Path: /business-analysis/health
+            Method: get
+            RestApiId: !Ref BusinessIntelligenceApi
+
+  # Risk Assessment Function
+  RiskAssessmentFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lambda_handlers.risk_assessment_handler.lambda_handler
+      Timeout: 120  # 2 minutes
+      MemorySize: 1024
+      Environment:
+        Variables:
+          RAG_VECTOR_STORE_ID: "vs_6928277edc1c8191a9429e3184313676"
+          RAG_ASSISTANT_ID: "asst_8ftpZtmmEQKsD8Ok1tU2Ejv5"
+          RAG_FILE_ID: "file-5wUAMRKdoL5RwkTCPtXENw"
+      Events:
+        RiskAssessmentApi:
+          Type: Api
+          Properties:
+            Path: /risk-assessment
+            Method: post
+            RestApiId: !Ref BusinessIntelligenceApi
+        RiskAssessmentHealthApi:
+          Type: Api
+          Properties:
+            Path: /risk-assessment/health
+            Method: get
+            RestApiId: !Ref BusinessIntelligenceApi
+
+  # API Gateway
+  BusinessIntelligenceApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+      Cors:
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+
+Outputs:
+  BusinessIntelligenceApi:
+    Description: "Business Intelligence Assistant API Gateway endpoint URL"
+    Value: !Sub "https://${BusinessIntelligenceApi}.execute-api.${AWS::Region}.amazonaws.com/dev/"
+  
+  BusinessAnalysisEndpoint:
+    Description: "Business Analysis endpoint"
+    Value: !Sub "https://${BusinessIntelligenceApi}.execute-api.${AWS::Region}.amazonaws.com/dev/business-analysis"
+  
+  RiskAssessmentEndpoint:
+    Description: "Risk Assessment endpoint" 
+    Value: !Sub "https://${BusinessIntelligenceApi}.execute-api.${AWS::Region}.amazonaws.com/dev/risk-assessment"

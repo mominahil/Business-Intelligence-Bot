@@ -1,0 +1,12 @@
+# Core dependencies for Lambda
+openai>=1.50.0
+pydantic>=2.12.0
+python-dotenv>=1.0.0
+
+# AWS Lambda runtime dependencies (optional, usually included in runtime)
+# boto3>=1.28.0
+# botocore>=1.31.0
+
+# Development and deployment tools (not needed in Lambda runtime)
+# serverless-python-requirements (for Serverless Framework)
+# aws-sam-cli (for SAM deployment)
