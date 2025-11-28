@@ -19,29 +19,6 @@ The Business Intelligence Assistant is a serverless AI platform that transforms 
 └─────────────────┘    └──────────────────┘    └───────────────────┘
 ```
 
-## Project Structure
-
-```
-business-intelligence-assistant/
-├── lambda_handlers/                    # Lambda handler functions
-│   ├── business_analysis_handler.py   # Business Analysis Lambda
-│   └── risk_assessment_handler.py     # Risk Assessment Lambda
-├── app/                               # Core application logic
-│   ├── business_analysis/            # Business Analysis AI service
-│   │   ├── service.py               # Core AI logic for business intelligence
-│   │   ├── schema.py                # Pydantic request/response models
-│   │   └── Sample_Business_Payload.json     # Sample data format
-│   └── risk_assessment/              # Risk Assessment AI service
-│       ├── service.py               # Core AI logic for risk analysis
-│       ├── schema.py                # Pydantic request/response models
-│       ├── rag_manager.py          # RAG system for enhanced analysis
-│       ├── setup_rag.py            # RAG system setup utility
-│       └── check_rag.py            # RAG system verification
-├── template.yaml                     # AWS SAM template
-├── requirements.txt                  # Python dependencies
-└── README.md                        # This documentation
-```
-
 
 ## Services
 
